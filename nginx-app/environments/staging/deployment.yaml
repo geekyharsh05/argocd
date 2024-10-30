@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-staging
+  labels:
+    app: nginx
+    environment: staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      environment: staging
+  template:
+    metadata:
+      labels:
+        app: nginx
+        environment: staging
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23-alpine   # Specific version for staging
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: nginx-staging-html
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-staging-html
+data:
+  index.html: |
+    <html>
+      <head><title>Staging Environment</title></head>
+      <body>
+        <h1>Welcome to the Staging Environment!</h1>
+      </body>
+    </html>
