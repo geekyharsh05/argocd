@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-production
+  labels:
+    app: nginx
+    environment: production
+spec:
+  replicas: 3                        # More replicas for production
+  selector:
+    matchLabels:
+      app: nginx
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: nginx
+        environment: production
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest           
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: nginx-production-html
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-production-html
+data:
+  index.html: |
+    <html>
+      <head><title>Production Environment</title></head>
+      <body>
+        <h1>Welcome to the Production Environment!</h1>
+      </body>
+    </html>
