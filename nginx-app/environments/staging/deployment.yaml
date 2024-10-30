@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.23-alpine   # Specific version for staging
+        image: nginx:1.23-alpine  
         ports:
         - containerPort: 80
         volumeMounts:
